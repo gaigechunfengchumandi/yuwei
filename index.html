@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>与微 — 健康自我管理平台</title>
+  <meta name="description" content="将模糊的健康目标转化为确保成功的微小行动，直接建立我能做到的信念。">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+  <!-- ========== Navigation ========== -->
+  <nav class="app-nav">
+    <div class="nav-inner">
+      <div class="nav-brand">
+        <div class="nav-brand-icon">微</div>
+        <div class="nav-brand-text">与微</div>
+      </div>
+
+      <div class="nav-tabs">
+        <button class="nav-tab active" data-module="m1">行动计划</button>
+        <button class="nav-tab" data-module="m2">榜样作用</button>
+        <button class="nav-tab" data-module="m3">认知重构</button>
+        <button class="nav-tab" data-module="m4">言语说服</button>
+      </div>
+
+      <div class="nav-actions">
+        <button class="theme-toggle" id="themeToggle" title="切换主题">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="4"/>
+            <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ========== Module 1: Action Plan ========== -->
+  <main class="app-container">
+    <div class="module-page active" id="m1">
+
+      <div class="module-header">
+        <div class="module-number">1</div>
+        <h1 class="module-title">行动计划</h1>
+        <p class="module-goal">将模糊的健康目标转化为确保成功的微小行动，直接建立"我能做到"的信念。</p>
+      </div>
+
+      <div class="step-flow">
+
+        <!-- Step 1: Theme Selection -->
+        <div class="step-card">
+          <div class="step-badge">
+            <span class="step-badge-num">1</span>
+            本周主题设定
+          </div>
+          <h3 class="step-title">你想为哪个健康目标迈出一小步？</h3>
+          <p class="step-guide">本周你想为哪个健康目标迈出一小步？</p>
+
+          <div class="theme-options">
+            <div class="theme-option" data-value="sleep">
+              <div class="theme-option-icon">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--accent-orange)" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+              </div>
+              <div class="theme-option-label">睡个好觉</div>
+            </div>
+            <div class="theme-option" data-value="exercise">
+              <div class="theme-option-icon">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--accent-orange)" stroke-width="2"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+              </div>
+              <div class="theme-option-label">轻松运动</div>
+            </div>
+            <div class="theme-option" data-value="eat">
+              <div class="theme-option-icon">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="var(--accent-orange)" stroke-width="2"><path d="M18 8h1a4 4 0 0 1 0 8h-1M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8zM6 1v3M10 1v3M14 1v3"/></svg>
+              </div>
+              <div class="theme-option-label">吃得开心</div>
+            </div>
+            <div class="theme-option-custom">
+              <div class="theme-option-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--text-muted)" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+              </div>
+              <div class="theme-option-label">自定义目标</div>
+            </div>
+          </div>
+
+          <div class="step-desc">提供结构化选择，满足自主性；降低决策负担，避免完美主义拖延。</div>
+        </div>
+
+        <!-- Step 2: Micro Action -->
+        <div class="step-card">
+          <div class="step-badge">
+            <span class="step-badge-num">2</span>
+            智能推荐 / 自定义微行动
+          </div>
+          <h3 class="step-title">我们为你拆解了一个极小、一定能完成的第一步</h3>
+          <p class="step-guide">我们为你拆解了一个极小、一定能完成的第一步。</p>
+
+          <div class="action-slider">
+            <div class="action-track">
+              <div class="action-card primary">
+                <div class="action-card-tag">系统推荐</div>
+                <div class="action-card-title">比平时早躺下10分钟</div>
+                <div class="action-card-desc">不要求睡着，只是比平时多给身体一点休息的时间。微小到不可能失败。</div>
+              </div>
+              <div class="action-card">
+                <div class="action-card-tag">备选方案</div>
+                <div class="action-card-title">饭后散步15分钟</div>
+                <div class="action-card-desc">在小区或附近公园慢慢走，不用跑，就是给身体一个活动的机会。</div>
+              </div>
+              <div class="action-card">
+                <div class="action-card-tag">备选方案</div>
+                <div class="action-card-title">每天喝一杯温水</div>
+                <div class="action-card-desc">起床后第一件事，给身体一个温暖的开始。简单到你一定能做到。</div>
+              </div>
+              <div class="action-card">
+                <div class="action-card-tag">备选方案</div>
+                <div class="action-card-title">睡前不看手机30分钟</div>
+                <div class="action-card-desc">用读书或听音乐代替刷手机，让大脑慢慢安静下来。</div>
+              </div>
+            </div>
+
+            <div class="slider-nav">
+              <button class="slider-btn slider-btn-prev">
+                <svg viewBox="0 0 24 24"><polyline points="15 18 9 12 15 6"/></svg>
+              </button>
+              <button class="slider-btn slider-btn-next">
+                <svg viewBox="0 0 24 24"><polyline points="9 18 15 12 9 6"/></svg>
+              </button>
+            </div>
+          </div>
+
+          <div class="custom-input-wrap">
+            <input class="custom-input" type="text" placeholder="或者，写下你自己的微行动..." maxlength="30">
+            <span class="char-count">0/30</span>
+          </div>
+
+          <div class="step-desc">确保掌握性经验的起点足够低，保证100%可完成。</div>
+        </div>
+
+        <!-- Step 3: Confidence Assessment -->
+        <div class="step-card">
+          <div class="step-badge">
+            <span class="step-badge-num">3</span>
+            确认行动与信心评估
+          </div>
+          <h3 class="step-title">你觉得这周完成这件事，有几分信心？</h3>
+          <p class="step-guide">你觉得这周完成这件事，有几分信心？（0-10分）</p>
+
+          <div class="confidence-wrap">
+            <div class="confidence-label">拖动滑块，给自己打分</div>
+            <div class="confidence-slider-track">
+              <div class="confidence-slider-fill" style="width:50%"></div>
+              <div class="confidence-slider-thumb" style="left:50%"></div>
+            </div>
+            <div class="confidence-value">5</div>
+
+            <div class="confidence-encourage">
+              感觉信心不足？没关系，我们可以再把它拆小一点。<br>试试把行动再减半，让它变得更容易完成。
+            </div>
+          </div>
+
+          <div class="step-desc">即时认知重构干预，防止因目标稍大就放弃。</div>
+        </div>
+
+        <!-- Step 4: Daily Check-in -->
+        <div class="step-card">
+          <div class="step-badge">
+            <span class="step-badge-num">4</span>
+            每日提醒与即时记录
+          </div>
+          <h3 class="step-title">完成了就来点个亮吧</h3>
+
+          <div class="checkin-area">
+            <div class="checkin-push-text">
+              如果你今天愿意的话，记得你的小行动：<em>比平时早躺下10分钟</em>。做到了就来点个亮吧！
+            </div>
+            <button class="checkin-btn">
+              <div class="sun-rays"></div>
+              <svg class="sun-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="5"/>
+                <line x1="12" y1="1" x2="12" y2="3"/>
+                <line x1="12" y1="21" x2="12" y2="23"/>
+                <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+                <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+                <line x1="1" y1="12" x2="3" y2="12"/>
+                <line x1="21" y1="12" x2="23" y2="12"/>
+                <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
+                <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+              </svg>
+              <span class="checkin-label">完成打卡</span>
+            </button>
+          </div>
+
+          <div class="step-desc">即时正向反馈；推送文案使用"如果你愿意"等自主性支持语言。</div>
+        </div>
+
+        <!-- Step 5: Weekly Review -->
+        <div class="step-card">
+          <div class="step-badge">
+            <span class="step-badge-num">5</span>
+            周期回顾与归因引导
+          </div>
+          <h3 class="step-title">回顾这一周</h3>
+
+          <div class="review-card">
+            <div class="review-success-icon">
+              <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+            </div>
+            <div class="review-title">太棒了！本周你完成了5天</div>
+            <div class="review-text">你觉得主要是因为你做对了什么？</div>
+
+            <div class="review-options">
+              <div class="review-option">坚持执行，每天都记得做</div>
+              <div class="review-option">把行动融入日常，找到了合适的时间</div>
+              <div class="review-option">行动足够小，压力不大就能完成</div>
+            </div>
+          </div>
+
+          <div class="step-desc">系统性地进行归因再训练，强化内控点。</div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ========== Module 2: Peer Stories ========== -->
+    <div class="module-page" id="m2">
+
+      <div class="module-header">
+        <div class="module-number m2">2</div>
+        <h1 class="module-title">榜样作用</h1>
+        <p class="module-goal">让用户看到"和我一样的人"的成功故事，激发"他行，我也行"的信念。</p>
+      </div>
+
+      <div class="step-flow">
+
+        <!-- Step 1: Companion Wall -->
+        <div class="step-card m2">
+          <div class="step-badge">
+            <span class="step-badge-num m2">1</span>
+            匹配与发现
+          </div>
+          <h3 class="step-title">同行者墙</h3>
+          <p class="step-guide">和你一样曾为睡眠困扰的大学生</p>
+
+          <div class="companion-wall">
+            <div class="companion-card">
+              <div class="companion-avatar">小</div>
+              <div class="companion-tag">和你一样曾为睡眠困扰的大学生</div>
+              <div class="companion-name">小林</div>
+              <div class="companion-snippet">曾经每晚辗转到凌晨三点，后来发现一个小习惯改变了一切</div>
+            </div>
+            <div class="companion-card">
+              <div class="companion-avatar" style="background:linear-gradient(135deg, var(--accent-green), #9aad7a)">周</div>
+              <div class="companion-tag">和你一样想养成运动习惯的白领</div>
+              <div class="companion-name">周雅</div>
+              <div class="companion-snippet">从完全不动到每天步行15分钟，一个月后的变化让我意外</div>
+            </div>
+            <div class="companion-card">
+              <div class="companion-avatar" style="background:linear-gradient(135deg, var(--accent-orange), var(--accent-warm))">陈</div>
+              <div class="companion-tag">和你一样为饮食焦虑的年轻人</div>
+              <div class="companion-name">陈晨</div>
+              <div class="companion-snippet">不再追求完美饮食，而是找到一个让自己舒服的小改变</div>
+            </div>
+          </div>
+
+          <div class="step-desc m2">相似性是替代性经验生效的关键。最大程度降低"他太厉害了，我学不来"的排斥感。</div>
+        </div>
+
+        <!-- Step 2: Story Reading -->
+        <div class="step-card m2">
+          <div class="step-badge">
+            <span class="step-badge-num m2">2</span>
+            故事沉浸式阅读
+          </div>
+          <h3 class="step-title">每一段真实的转变，都从微小处开始</h3>
+
+          <p style="font-size:14px;color:var(--text-secondary);line-height:1.7;margin-bottom:16px">
+            点击上方卡片，阅读同伴完整的故事。每个故事都遵循：<strong>困境 - 转折 - 第一步 - 现在</strong> 的叙事弧线。
+          </p>
+
+          <div class="step-desc m2">完整、真实、可复制的叙事弧线，提供完整的替代性学习材料。</div>
+        </div>
+
+        <!-- Step 3: Extract Key Step -->
+        <div class="step-card m2">
+          <div class="step-badge">
+            <span class="step-badge-num m2">3</span>
+            提取"关键一步"
+          </div>
+          <h3 class="step-title">把启发变成行动</h3>
+
+          <div class="key-step-popup show">
+            <div class="key-step-quote">Ta 最关键的一步是：<em>每天睡前放下手机10分钟</em>。你觉得这个方法，你可以试试看吗？</div>
+            <div class="key-step-actions">
+              <button class="btn-primary blue" onclick="PeerStories.tryAction()">我想试试</button>
+              <button class="btn-secondary" onclick="PeerStories.saveAction()">先收藏</button>
+            </div>
+          </div>
+
+          <div class="step-desc m2">将观察学习立即导向行动意图，防止"看完就忘"。</div>
+        </div>
+
+        <!-- Step 4: Warm Interactions -->
+        <div class="step-card m2">
+          <div class="step-badge">
+            <span class="step-badge-num m2">4</span>
+            轻量互动与连接
+          </div>
+          <h3 class="step-title">温暖地回应</h3>
+
+          <div class="warm-actions">
+            <div class="warm-action">谢谢你的分享</div>
+            <div class="warm-action">对我有启发</div>
+            <div class="warm-action">我也在经历类似的</div>
+            <div class="warm-action">你的故事给了我勇气</div>
+          </div>
+
+          <div class="step-desc m2">营造安全、支持性的社群氛围，满足归属感，同时避免公开比较带来的压力。</div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ========== Module 3: Cognitive Restructuring ========== -->
+    <div class="module-page" id="m3">
+
+      <div class="module-header">
+        <div class="module-number m3">3</div>
+        <h1 class="module-title">认知重构</h1>
+        <p class="module-goal">改善对健康不适感的灾难化解释，打破"不适 - 恐慌 - 更不适"的循环。</p>
+      </div>
+
+      <div class="step-flow">
+
+        <!-- Step 1: Identify Catastrophic Thoughts -->
+        <div class="step-card m3">
+          <div class="step-badge">
+            <span class="step-badge-num m3">1</span>
+            识别灾难化想法
+          </div>
+          <h3 class="step-title">大脑里第一个冒出来的念头是什么？</h3>
+          <p class="step-guide">你刚才是不是感觉到某种不适或压力？大脑里第一个冒出来的念头是什么？</p>
+
+          <div style="margin-bottom:16px">
+            <button class="mood-rescue-btn">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/><path d="M12 16v-4M12 8h.01"/></svg>
+              心情急救
+            </button>
+          </div>
+
+          <div class="thought-options">
+            <div class="thought-option">我是不是永远好不了了</div>
+            <div class="thought-option">今天状态太糟了，全毁了</div>
+            <div class="thought-option">我的心跳好快，是不是要犯病了</div>
+            <div class="thought-option">身体出了大问题，肯定很严重</div>
+          </div>
+
+          <div class="thought-custom">
+            <input class="custom-input" type="text" placeholder="或者写下你此刻的想法..." maxlength="50" style="max-width:100%">
+          </div>
+
+          <div class="step-desc m3">提供预选的常见灾难化想法，降低表达门槛。</div>
+        </div>
+
+        <!-- Step 2: Body Scan -->
+        <div class="step-card m3">
+          <div class="step-badge">
+            <span class="step-badge-num m3">2</span>
+            身体扫描与感受命名
+          </div>
+          <h3 class="step-title">把注意力从大脑带回到身体</h3>
+          <p class="step-guide">花10秒钟，感受一下身体哪个部分最不舒服。</p>
+
+          <div class="body-scan-container">
+            <div class="body-outline">
+              <div class="body-part head" data-part="head">头部</div>
+              <div class="body-part shoulders" data-part="shoulders">肩膀</div>
+              <div class="body-part chest" data-part="chest">胸口</div>
+              <div class="body-part stomach" data-part="stomach">胃部</div>
+              <div class="body-part legs" data-part="legs">腿部</div>
+            </div>
+
+            <div class="emotion-tags">
+              <div class="emotion-tag">紧绷</div>
+              <div class="emotion-tag">发沉</div>
+              <div class="emotion-tag">空空的</div>
+              <div class="emotion-tag">发热</div>
+              <div class="emotion-tag">隐隐作痛</div>
+              <div class="emotion-tag">说不清</div>
+            </div>
+          </div>
+
+          <div class="step-desc m3">简易的正念和情绪命名练习，能直接降低杏仁核活跃度。</div>
+        </div>
+
+        <!-- Step 3: Socratic Dialogue -->
+        <div class="step-card m3">
+          <div class="step-badge">
+            <span class="step-badge-num m3">3</span>
+            认知重评引导
+          </div>
+          <h3 class="step-title">我们来当一次侦探</h3>
+
+          <div class="dialogue-container">
+            <div class="dialogue-bubble app">
+              <div class="app-label">与微</div>
+              你说你感觉"心跳很快"。我们来当一次侦探，除了"很危险"，还有没有其他可能？
+            </div>
+
+            <div class="alternative-options">
+              <div class="alternative-option">刚喝了咖啡的正常反应</div>
+              <div class="alternative-option">身体在告诉我今天太累了，需要休息</div>
+              <div class="alternative-option">只是一种紧张感，它会自己过去</div>
+              <div class="alternative-option">运动后的正常生理反应</div>
+            </div>
+          </div>
+
+          <div class="step-desc m3">遵循CBT"行为实验"原则，引导用户自己发现替代性解释。</div>
+        </div>
+
+        <!-- Step 4: Rational Response Card -->
+        <div class="step-card m3">
+          <div class="step-badge">
+            <span class="step-badge-num m3">4</span>
+            生成理性回应卡片
+          </div>
+          <h3 class="step-title">你的理性回应</h3>
+          <p class="step-guide">选择一个替代解释后，我们将为你生成一张卡片</p>
+
+          <div class="response-card-area">
+            <div class="response-card visible">
+              <div class="response-card-label">你的理性回应卡片</div>
+              <div class="response-card-thought">
+                我的自动想法："我的心跳好快，是不是要犯病了？"
+              </div>
+              <div class="response-card-response">
+                更现实的回应："这只是喝了咖啡的正常反应。它会过去的。"
+              </div>
+              <div class="response-card-actions">
+                <button class="btn-primary green" onclick="Cognition.saveCard()">保存到能量工具箱</button>
+                <button class="btn-secondary" onclick="Cognition.setWallpaper()">设为锁屏壁纸</button>
+              </div>
+            </div>
+          </div>
+
+          <div class="step-desc m3">可视化的认知重构成果，强化记忆，便于在下次焦虑时快速调取。</div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ========== Module 4: Verbal Persuasion ========== -->
+    <div class="module-page" id="m4">
+
+      <div class="module-header">
+        <div class="module-number m4">4</div>
+        <h1 class="module-title">言语说服</h1>
+        <p class="module-goal">将鼓励转化为用户对自己能力的相信，而非对评价的依赖。</p>
+      </div>
+
+      <div class="step-flow">
+
+        <!-- Step 1: Instant Affirmation -->
+        <div class="step-card m4">
+          <div class="step-badge">
+            <span class="step-badge-num m4">1</span>
+            即时肯定
+          </div>
+          <h3 class="step-title">我看到了你的坚持</h3>
+
+          <div class="affirmation-push">
+            <div class="affirmation-icon">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M12 22c5.523 0 10-4.477 10-10S17.523 2 12 2 2 6.477 2 12s4.477 10 10 10z"/><path d="M8 14s1.5 2 4 2 4-2 4-2"/><line x1="9" y1="9" x2="9.01" y2="9"/><line x1="15" y1="9" x2="15.01" y2="9"/></svg>
+            </div>
+            <div class="affirmation-text">
+              我看到了，你今天完成了<em>步行10分钟</em>。这很不容易。<br>不是每个人都能做到的，但你做到了。
+            </div>
+          </div>
+
+          <div class="step-desc m4">纯粹的肯定和看见，不急于给建议，这是自主性支持的核心。</div>
+        </div>
+
+        <!-- Step 2: Attribution Feedback -->
+        <div class="step-card m4">
+          <div class="step-badge">
+            <span class="step-badge-num m4">2</span>
+            努力 / 策略归因反馈
+          </div>
+          <h3 class="step-title">你的成功不是偶然</h3>
+
+          <div class="feedback-template success">
+            <div class="feedback-text">
+              你坚持下来了。更重要的是，你<strong>找到了把新习惯融入到忙碌日程里的方法</strong>，这是策略的成功。<br><br>
+              不是运气，不是巧合 — 是你主动找到了适合自己的方式。
+            </div>
+          </div>
+
+          <div class="feedback-template resilience mt-6">
+            <div class="feedback-text orange">
+              这周你断了一天，但<strong>第二天又续上了</strong>。这种"恢复的能力"，比完美更重要。<br><br>
+              能在跌倒后重新站起来，本身就是一种了不起的力量。
+            </div>
+          </div>
+
+          <div class="step-desc m4">将成功明确归因于用户的内部、可控因素（策略、努力、韧性），直接训练内控点。</div>
+        </div>
+
+        <!-- Step 3: Self-Affirmation Card -->
+        <div class="step-card m4">
+          <div class="step-badge">
+            <span class="step-badge-num m4">3</span>
+            引导自我肯定
+          </div>
+          <h3 class="step-title">写下你对自己的肯定</h3>
+
+          <div class="self-card">
+            <div class="self-card-title">回顾这一周</div>
+            <div class="self-card-fill">
+              我最欣赏自己的一个表现是<span class="blank"></span>。<br>
+              我证明了自己可以<span class="blank"></span>。
+            </div>
+          </div>
+
+          <div class="step-desc m4">培养用户成为自己内在的鼓励者，逐步让"言语说服"的主体从外部转向内部。</div>
+        </div>
+
+        <!-- Step 4: Growth Visualization -->
+        <div class="step-card m4">
+          <div class="step-badge">
+            <span class="step-badge-num m4">4</span>
+            收集与展示成长证据
+          </div>
+          <h3 class="step-title">你的成长之路</h3>
+
+          <div class="growth-chart-wrap">
+            <div class="growth-chart-header">
+              <div class="growth-chart-title">主体性能量曲线</div>
+            </div>
+
+            <div class="growth-chart-container">
+              <div class="growth-chart-canvas">
+                <div class="chart-grid">
+                  <div class="chart-grid-line"></div>
+                  <div class="chart-grid-line"></div>
+                  <div class="chart-grid-line"></div>
+                  <div class="chart-grid-line"></div>
+                  <div class="chart-grid-line"></div>
+                </div>
+                <div class="chart-bars"></div>
+              </div>
+            </div>
+
+            <div style="display:flex;gap:16px;margin-top:16px;font-size:12px;color:var(--text-muted)">
+              <span style="display:flex;align-items:center;gap:6px"><span style="width:12px;height:12px;border-radius:4px;background:var(--accent-green)"></span>信心评分</span>
+              <span style="display:flex;align-items:center;gap:6px"><span style="width:12px;height:12px;border-radius:4px;background:var(--accent-orange)"></span>行动完成率</span>
+              <span style="display:flex;align-items:center;gap:6px"><span style="width:12px;height:12px;border-radius:4px;background:var(--accent-blue)"></span>认知卡片</span>
+            </div>
+          </div>
+
+          <div class="growth-milestone mt-6">
+            <div class="growth-milestone-text">
+              当你连续记录一段时间后，系统会为你生成一段成长回顾视频，将你一路以来的理性回应卡片、完成的微行动和里程碑串联起来，配以温暖的音乐，作为礼物推送给你。
+            </div>
+          </div>
+
+          <div class="step-desc m4">可视化的成长证据，是抵抗自我怀疑、巩固新的自我效能感叙事的最强武器。</div>
+        </div>
+
+      </div>
+    </div>
+  </main>
+
+  <!-- ========== Story Modal ========== -->
+  <div class="story-modal" id="storyModal">
+    <div class="story-modal-header">
+      <div style="font-family:var(--font-heading);font-size:18px;font-weight:600">同伴故事</div>
+      <button class="story-modal-close">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="story-modal-body"></div>
+  </div>
+
+  <!-- ========== Footer ========== -->
+  <footer style="text-align:center;padding:40px 24px 24px;color:var(--text-muted);font-size:13px;border-top:1px solid var(--border-light)">
+    <p>与微 — 将模糊的健康目标转化为确保成功的微小行动</p>
+    <p style="margin-top:8px;font-size:12px">基于自我效能理论的健康自我管理平台</p>
+  </footer>
+
+  <script src="js/main.js"></script>
+</body>
+</html>

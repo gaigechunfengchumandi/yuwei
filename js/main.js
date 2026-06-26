@@ -1,592 +1,561 @@
-/* =========================================
-   与微 - 健康自我管理平台
-   JavaScript - All Interactions & Animations
-   ========================================= */
+const APP = {
+  totals: { m1: 5, m2: 4, m3: 4, m4: 4 },
+  completed: {
+    m1: new Set(),
+    m2: new Set(),
+    m3: new Set(),
+    m4: new Set(),
+  },
+  state: {
+    currentModule: "m1",
+    themeLabel: "睡个好觉",
+    actionLabel: "比平时早躺下10分钟",
+    confidence: 5,
+    thought: "我的心跳好快，是不是要犯病了",
+    alternative: "这是一阵紧张感，它会慢慢过去。",
+    selectedStory: "未选择",
+    peerAction: "等待提取",
+    checkinDone: false,
+    affirmations: {
+      admire: "",
+      prove: "",
+    },
+  },
+};
 
-// --- Theme System ---
+const storyData = {
+  xiaolin: {
+    name: "小林",
+    role: "睡眠困扰的大学生",
+    keyStep: "每天睡前放下手机 10 分钟",
+    sections: [
+      ["困境", "那段时间他总是熬到很晚，越想早点睡越清醒，第二天又会因为疲惫更焦虑。"],
+      ["转折", "他不再要求自己立刻改掉所有习惯，而是先接受“只做一点点也算开始”。"],
+      ["第一步", "他先把睡前最后 10 分钟从手机里拿出来，换成拉窗帘、喝水、躺下。"],
+      ["现在", "虽然偶尔还是会晚睡，但他第一次感觉到自己能慢慢把节奏拉回来。"],
+    ],
+  },
+  zhouya: {
+    name: "周雅",
+    role: "想建立运动习惯的白领",
+    keyStep: "下班后先出门走 15 分钟",
+    sections: [
+      ["困境", "她总觉得运动要完整、要高效，结果每次一忙就整个计划作废。"],
+      ["转折", "后来她只给自己一个要求：下班后先出门，不规定速度和距离。"],
+      ["第一步", "她从饭后绕小区走 15 分钟开始，只把运动定义成“我今天有动起来”。"],
+      ["现在", "运动不再是压力项，反而变成了她一天里最容易完成的一件事。"],
+    ],
+  },
+  chenchen: {
+    name: "陈晨",
+    role: "为饮食焦虑的年轻人",
+    keyStep: "先把晚饭时间稳定下来",
+    sections: [
+      ["困境", "她总在“要吃得完美”和“干脆乱吃”之间来回摆动，越在意越容易失控。"],
+      ["转折", "她把目标从“完美饮食”改成“先让身体感到舒服”，优先建立规律。"],
+      ["第一步", "她先固定晚饭时间，并保证每顿饭里至少有一项让自己安心的食物。"],
+      ["现在", "她开始不再把每顿饭都当成考试，而是当成一件可以慢慢调好的日常。"],
+    ],
+  },
+};
+
+function $(selector, scope = document) {
+  return scope.querySelector(selector);
+}
+
+function $$(selector, scope = document) {
+  return Array.from(scope.querySelectorAll(selector));
+}
+
+function showToast(text) {
+  const toast = document.createElement("div");
+  toast.className = "toast";
+  toast.textContent = text;
+  document.body.appendChild(toast);
+  window.setTimeout(() => toast.remove(), 1800);
+}
+
 const ThemeManager = {
   init() {
-    const saved = localStorage.getItem('yuwei-theme') || 'system';
+    const saved = localStorage.getItem("yuwei-theme") || "system";
     this.apply(saved);
-    this.bindToggle();
+    $("#themeToggle").addEventListener("click", () => {
+      const current = localStorage.getItem("yuwei-theme") || "system";
+      const next = current === "light" ? "dark" : current === "dark" ? "system" : "light";
+      this.apply(next);
+    });
   },
 
   apply(mode) {
-    let resolved;
-    if (mode === 'system') {
-      resolved = window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
-    } else {
-      resolved = mode;
-    }
-    document.documentElement.setAttribute('data-theme', resolved);
-    localStorage.setItem('yuwei-theme', mode);
+    const resolved = mode === "system"
+      ? (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light")
+      : mode;
+    document.documentElement.setAttribute("data-theme", resolved);
+    localStorage.setItem("yuwei-theme", mode);
     this.updateIcon(resolved);
   },
 
   updateIcon(theme) {
-    const btn = document.getElementById('themeToggle');
-    if (!btn) return;
-    const svg = btn.querySelector('svg');
-    if (theme === 'dark') {
-      svg.innerHTML = '<path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/>';
+    const svg = $("#themeToggle svg");
+    if (theme === "dark") {
+      svg.innerHTML = '<path d="M12 3a7.5 7.5 0 0 0 9 9A9 9 0 1 1 12 3Z"></path>';
     } else {
-      svg.innerHTML = '<circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/>';
+      svg.innerHTML = '<circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"></path>';
     }
   },
-
-  bindToggle() {
-    const btn = document.getElementById('themeToggle');
-    if (!btn) return;
-    btn.addEventListener('click', () => {
-      const current = localStorage.getItem('yuwei-theme') || 'system';
-      const next = current === 'light' ? 'dark' : current === 'dark' ? 'system' : 'light';
-      document.body.classList.add('theme-transitioning');
-      this.apply(next);
-      setTimeout(() => document.body.classList.remove('theme-transitioning'), 300);
-    });
-
-    window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
-      if (localStorage.getItem('yuwei-theme') === 'system') this.apply('system');
-    });
-  }
 };
 
-// --- Navigation ---
+const Progress = {
+  mark(stepId) {
+    const [moduleId, index] = stepId.split("-");
+    APP.completed[moduleId].add(index);
+    const card = document.querySelector(`[data-step="${stepId}"]`);
+    if (card) {
+      const status = $(".step-status", card);
+      status.textContent = "已完成";
+      status.classList.add("done");
+    }
+    this.render();
+  },
+
+  render() {
+    let globalDone = 0;
+    let globalTotal = 0;
+
+    Object.entries(APP.totals).forEach(([moduleId, total]) => {
+      const done = APP.completed[moduleId].size;
+      globalDone += done;
+      globalTotal += total;
+
+      const countText = `${done}/${total}`;
+      const navCount = document.querySelector(`[data-module-count="${moduleId}"]`);
+      const railCount = document.querySelector(`[data-module-progress="${moduleId}"]`);
+      if (navCount) navCount.textContent = countText;
+      if (railCount) railCount.textContent = countText;
+    });
+
+    $("#globalProgressText").textContent = `${globalDone}/${globalTotal}`;
+    $("#summaryProgress").textContent = `${globalDone}/${globalTotal}`;
+    $("#overviewStatus").textContent = globalDone === globalTotal ? "本周完成" : "进行中";
+  },
+};
+
+const Summary = {
+  render() {
+    $("#summaryTheme").textContent = APP.state.themeLabel;
+    $("#summaryAction").textContent = APP.state.actionLabel;
+    $("#summaryConfidence").textContent = `${APP.state.confidence}/10`;
+    $("#moduleOneTheme").textContent = APP.state.themeLabel;
+    $("#moduleOneAction").textContent = APP.state.actionLabel;
+    $("#moduleOneConfidence").textContent = `${APP.state.confidence}/10`;
+    $("#checkinActionText").textContent = APP.state.actionLabel;
+    $("#peerStoryName").textContent = APP.state.selectedStory;
+    $("#peerKeyAction").textContent = APP.state.peerAction;
+    $("#cognitionThought").textContent = APP.state.thought;
+    $("#cognitionAlternative").textContent = APP.state.alternative;
+
+    const filled = Object.values(APP.state.affirmations).filter(Boolean).length;
+    $("#affirmationStatus").textContent = filled === 2 ? "已填写" : filled === 1 ? "填写中" : "待填写";
+  },
+};
+
 const Navigation = {
   init() {
-    const tabs = document.querySelectorAll('.nav-tab');
-    tabs.forEach(tab => {
-      tab.addEventListener('click', () => {
-        const target = tab.dataset.module;
-        this.switchTo(target);
-      });
+    $$(".nav-tab, .module-rail-card").forEach((button) => {
+      button.addEventListener("click", () => this.switchTo(button.dataset.module));
     });
   },
 
   switchTo(moduleId) {
-    // Update tabs
-    document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
-    document.querySelector(`.nav-tab[data-module="${moduleId}"]`).classList.add('active');
-
-    // Update pages
-    document.querySelectorAll('.module-page').forEach(p => p.classList.remove('active'));
-    document.getElementById(moduleId).classList.add('active');
-
-    // Re-trigger scroll animations
-    ScrollAnimations.observeNewCards();
-  }
-};
-
-// --- Scroll Animations ---
-const ScrollAnimations = {
-  init() {
-    this.observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('visible');
-        }
-      });
-    }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
-
-    this.observeAll();
-  },
-
-  observeAll() {
-    document.querySelectorAll('.step-card, .companion-card, .review-card, .response-card, .self-card, .growth-chart-wrap').forEach(el => {
-      this.observer.observe(el);
+    APP.state.currentModule = moduleId;
+    $$(".nav-tab").forEach((tab) => {
+      const active = tab.dataset.module === moduleId;
+      tab.classList.toggle("active", active);
+      tab.setAttribute("aria-selected", active ? "true" : "false");
+    });
+    $$(".module-rail-card").forEach((card) => {
+      card.classList.toggle("active", card.dataset.module === moduleId);
+    });
+    $$(".module-page").forEach((page) => {
+      page.classList.toggle("active", page.id === moduleId);
     });
   },
-
-  observeNewCards() {
-    const activePage = document.querySelector('.module-page.active');
-    if (!activePage) return;
-    activePage.querySelectorAll('.step-card:not(.visible), .companion-card:not(.visible)').forEach(el => {
-      this.observer.observe(el);
-    });
-  }
 };
 
-// --- Module 1: Action Plan ---
 const ActionPlan = {
-  currentTheme: null,
-  currentAction: 0,
-  confidenceValue: 5,
-  checkedIn: false,
-  sliderDragging: false,
-
   actions: [
-    { title: '比平时早躺下10分钟', desc: '不要求睡着，只是比平时多给身体一点休息的时间。', tag: '系统推荐' },
-    { title: '饭后散步15分钟', desc: '在小区或附近公园慢慢走，不用跑。', tag: '备选方案' },
-    { title: '每天喝一杯温水', desc: '起床后第一件事，给身体一个温暖的开始。', tag: '备选方案' },
-    { title: '睡前不看手机30分钟', desc: '用读书或听音乐代替刷手机，让大脑慢慢安静下来。', tag: '备选方案' },
+    "比平时早躺下10分钟",
+    "饭后散步15分钟",
+    "每天喝一杯温水",
+    "睡前不看手机30分钟",
   ],
+  actionIndex: 0,
+  dragging: false,
 
   init() {
-    this.bindThemeSelection();
-    this.bindActionSlider();
-    this.bindCustomInput();
-    this.bindConfidenceSlider();
-    this.bindCheckIn();
+    this.renderDots();
+    this.bindThemeOptions();
+    this.bindActionCards();
+    this.bindSliderButtons();
+    this.bindCustomAction();
+    this.bindConfidence();
+    this.bindCheckin();
     this.bindReview();
   },
 
-  bindThemeSelection() {
-    const options = document.querySelectorAll('#m1 .theme-option');
-    options.forEach(opt => {
-      opt.addEventListener('click', () => {
-        options.forEach(o => o.classList.remove('selected'));
-        opt.classList.add('selected');
-        this.currentTheme = opt.dataset.value;
+  renderDots() {
+    const dots = $("#actionDots");
+    dots.innerHTML = "";
+    this.actions.forEach((_, index) => {
+      const dot = document.createElement("span");
+      dot.className = `slider-dot${index === this.actionIndex ? " active" : ""}`;
+      dots.appendChild(dot);
+    });
+  },
+
+  setAction(index) {
+    this.actionIndex = index;
+    APP.state.actionLabel = this.actions[index];
+    $$(".action-card").forEach((card, i) => {
+      card.classList.toggle("primary", i === index);
+    });
+    $$("#actionDots .slider-dot").forEach((dot, i) => {
+      dot.classList.toggle("active", i === index);
+    });
+    Summary.render();
+    Progress.mark("m1-2");
+  },
+
+  bindThemeOptions() {
+    $$(".theme-option").forEach((button) => {
+      button.addEventListener("click", () => {
+        $$(".theme-option").forEach((item) => item.classList.remove("selected"));
+        button.classList.add("selected");
+        APP.state.themeLabel = button.dataset.label;
+        Summary.render();
+        Progress.mark("m1-1");
       });
     });
-
-    const customBtn = document.querySelector('#m1 .theme-option-custom');
-    if (customBtn) {
-      customBtn.addEventListener('click', () => {
-        options.forEach(o => o.classList.remove('selected'));
-        customBtn.classList.add('selected');
-        this.currentTheme = 'custom';
-      });
-    }
   },
 
-  bindActionSlider() {
-    const prevBtn = document.querySelector('#m1 .slider-btn-prev');
-    const nextBtn = document.querySelector('#m1 .slider-btn-next');
-
-    if (prevBtn) prevBtn.addEventListener('click', () => this.slideAction(-1));
-    if (nextBtn) nextBtn.addEventListener('click', () => this.slideAction(1));
-  },
-
-  slideAction(dir) {
-    this.currentAction = Math.max(0, Math.min(this.actions.length - 1, this.currentAction + dir));
-    const track = document.querySelector('#m1 .action-track');
-    if (track) {
-      track.style.transform = `translateX(-${this.currentAction * 100}%)`;
-    }
-    this.updateActionCards();
-  },
-
-  updateActionCards() {
-    const cards = document.querySelectorAll('#m1 .action-card');
-    cards.forEach((card, i) => {
-      card.classList.toggle('primary', i === this.currentAction);
+  bindActionCards() {
+    $$(".action-card").forEach((button, index) => {
+      button.addEventListener("click", () => this.setAction(index));
     });
   },
 
-  bindCustomInput() {
-    const input = document.querySelector('#m1 .custom-input');
-    const counter = document.querySelector('#m1 .char-count');
-    if (!input) return;
-
-    input.addEventListener('input', () => {
-      const len = input.value.length;
-      counter.textContent = `${len}/30`;
-      counter.classList.toggle('warn', len > 25);
-      if (len > 30) input.value = input.value.slice(0, 30);
+  bindSliderButtons() {
+    $("#actionPrev").addEventListener("click", () => {
+      this.setAction((this.actionIndex + this.actions.length - 1) % this.actions.length);
+    });
+    $("#actionNext").addEventListener("click", () => {
+      this.setAction((this.actionIndex + 1) % this.actions.length);
     });
   },
 
-  bindConfidenceSlider() {
-    const track = document.querySelector('#m1 .confidence-slider-track');
-    const thumb = document.querySelector('#m1 .confidence-slider-thumb');
-    const fill = document.querySelector('#m1 .confidence-slider-fill');
-    const display = document.querySelector('#m1 .confidence-value');
-    const encourage = document.querySelector('#m1 .confidence-encourage');
+  bindCustomAction() {
+    const input = $("#customActionInput");
+    const count = $("#customActionCount");
+    input.addEventListener("input", () => {
+      count.textContent = `${input.value.length}/30`;
+      if (input.value.trim().length >= 3) {
+        APP.state.actionLabel = input.value.trim();
+        Summary.render();
+        Progress.mark("m1-2");
+      }
+    });
+  },
 
-    if (!track || !thumb) return;
+  bindConfidence() {
+    const track = $("#confidenceTrack");
+    const fill = $("#confidenceFill");
+    const thumb = $("#confidenceThumb");
+    const valueEl = $("#confidenceValue");
+    const encourage = $("#confidenceEncourage");
 
-    const updateSlider = (value) => {
-      this.confidenceValue = value;
-      const pct = value / 10 * 100;
-      fill.style.width = pct + '%';
-      thumb.style.left = pct + '%';
-      display.textContent = value;
-
-      display.classList.remove('high', 'low');
-      if (value >= 7) display.classList.add('high');
-      if (value <= 3) display.classList.add('low');
-
-      encourage.classList.toggle('show', value <= 3);
+    const update = (value) => {
+      APP.state.confidence = value;
+      const pct = value / 10;
+      fill.style.width = `${pct * 100}%`;
+      thumb.style.left = `calc(${pct * 100}% - 15px)`;
+      valueEl.textContent = String(value);
+      encourage.classList.toggle("hidden", value > 3);
+      Summary.render();
+      Progress.mark("m1-3");
     };
 
-    // Mouse drag
-    thumb.addEventListener('mousedown', () => this.sliderDragging = true);
-    document.addEventListener('mouseup', () => this.sliderDragging = false);
-    document.addEventListener('mousemove', (e) => {
-      if (!this.sliderDragging) return;
+    const setFromClientX = (clientX) => {
       const rect = track.getBoundingClientRect();
-      const pct = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
-      updateSlider(Math.round(pct * 10));
+      const pct = Math.min(1, Math.max(0, (clientX - rect.left) / rect.width));
+      update(Math.round(pct * 10));
+    };
+
+    track.addEventListener("click", (event) => setFromClientX(event.clientX));
+    thumb.addEventListener("pointerdown", () => {
+      this.dragging = true;
+    });
+    document.addEventListener("pointermove", (event) => {
+      if (!this.dragging) return;
+      setFromClientX(event.clientX);
+    });
+    document.addEventListener("pointerup", () => {
+      this.dragging = false;
     });
 
-    // Touch drag
-    thumb.addEventListener('touchstart', () => this.sliderDragging = true);
-    document.addEventListener('touchend', () => this.sliderDragging = false);
-    document.addEventListener('touchmove', (e) => {
-      if (!this.sliderDragging) return;
-      const touch = e.touches[0];
-      const rect = track.getBoundingClientRect();
-      const pct = Math.max(0, Math.min(1, (touch.clientX - rect.left) / rect.width));
-      updateSlider(Math.round(pct * 10));
-    });
-
-    // Click on track
-    track.addEventListener('click', (e) => {
-      const rect = track.getBoundingClientRect();
-      const pct = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
-      updateSlider(Math.round(pct * 10));
-    });
-
-    updateSlider(5);
+    update(APP.state.confidence);
   },
 
-  bindCheckIn() {
-    const btn = document.querySelector('#m1 .checkin-btn');
-    if (!btn) return;
-
-    btn.addEventListener('click', () => {
-      if (this.checkedIn) return;
-      this.checkedIn = true;
-      btn.classList.add('done');
-
-      // Add rays
-      const raysContainer = btn.querySelector('.sun-rays');
-      if (raysContainer) {
-        for (let i = 0; i < 8; i++) {
-          const ray = document.createElement('div');
-          ray.className = 'sun-ray';
-          ray.style.cssText = `--angle: ${i * 45}deg; animation-delay: ${i * 0.15}s`;
-          raysContainer.appendChild(ray);
-        }
-      }
-
-      // Change text
-      const label = btn.querySelector('.checkin-label');
-      if (label) label.textContent = '已完成';
+  bindCheckin() {
+    const button = $("#checkinBtn");
+    button.addEventListener("click", () => {
+      if (APP.state.checkinDone) return;
+      APP.state.checkinDone = true;
+      button.classList.add("done");
+      $(".checkin-btn-text", button).textContent = "已完成";
+      Progress.mark("m1-4");
+      showToast("今天已记录");
     });
   },
 
   bindReview() {
-    const options = document.querySelectorAll('#m1 .review-option');
-    options.forEach(opt => {
-      opt.addEventListener('click', () => {
-        options.forEach(o => o.classList.remove('selected'));
-        opt.classList.add('selected');
+    $$(".review-option").forEach((button) => {
+      button.addEventListener("click", () => {
+        $$(".review-option").forEach((item) => item.classList.remove("selected"));
+        button.classList.add("selected");
+        Progress.mark("m1-5");
       });
     });
-  }
+  },
 };
 
-// --- Module 2: Peer Stories ---
 const PeerStories = {
   init() {
-    this.bindCompanionCards();
-    this.bindWarmActions();
-    this.bindKeyStep();
-    this.bindStoryModal();
+    this.bindCards();
+    this.bindModal();
+    this.bindActions();
   },
 
-  bindCompanionCards() {
-    const cards = document.querySelectorAll('#m2 .companion-card');
-    cards.forEach(card => {
-      card.addEventListener('click', () => {
-        this.openStory(card);
+  bindCards() {
+    $$(".companion-card").forEach((card) => {
+      card.addEventListener("click", () => {
+        $$(".companion-card").forEach((item) => item.classList.remove("selected"));
+        card.classList.add("selected");
+        const story = storyData[card.dataset.story];
+        APP.state.selectedStory = story.name;
+        APP.state.peerAction = story.keyStep;
+        $("#keyStepText").textContent = `Ta 最关键的一步是：${story.keyStep}。你愿意先试试看吗？`;
+        Summary.render();
+        Progress.mark("m2-1");
+        this.openStory(story);
       });
     });
   },
 
-  openStory(card) {
-    const modal = document.getElementById('storyModal');
-    const name = card.querySelector('.companion-name').textContent;
-    const snippet = card.querySelector('.companion-snippet').textContent;
-
-    const body = modal.querySelector('.story-modal-body');
-    body.innerHTML = `
-      <div class="story-section">
-        <div class="story-section-title"><span class="dot"></span>我的困境</div>
-        <div class="story-section-text">曾经和你一样，${snippet}。那段日子真的很难熬...</div>
-      </div>
-      <div class="story-section">
-        <div class="story-section-title"><span class="dot"></span>我的转折</div>
-        <div class="story-section-text">我发现一个小改变就能让事情变得不一样。不是什么惊天动地的方法，只是一个微小的调整。</div>
-      </div>
-      <div class="story-section">
-        <div class="story-section-title"><span class="dot"></span>我的第一步</div>
-        <div class="story-section-text">具体、微小、可复制。你也可以试试看。</div>
-      </div>
-      <div class="story-section">
-        <div class="story-section-title"><span class="dot"></span>我的现在</div>
-        <div class="story-section-text">改变是真实的，但不夸大。我还在路上，但已经比之前好很多了。</div>
-      </div>
-      <div class="key-step-popup show" id="keyStepPopup">
-        <div class="key-step-quote">Ta 最关键的一步是：<em>每天睡前放下手机10分钟</em>。你觉得这个方法，你可以试试看吗？</div>
-        <div class="key-step-actions">
-          <button class="btn-primary blue" onclick="PeerStories.tryAction()">我想试试</button>
-          <button class="btn-secondary" onclick="PeerStories.saveAction()">先收藏</button>
-        </div>
-      </div>
-    `;
-
-    modal.classList.add('show');
+  openStory(story) {
+    $("#storyModalName").textContent = story.name;
+    const body = $("#storyModalBody");
+    body.innerHTML = "";
+    story.sections.forEach(([title, text]) => {
+      const section = document.createElement("section");
+      section.className = "story-section";
+      section.innerHTML = `<h4 class="story-section-title">${title}</h4><p class="story-section-text">${text}</p>`;
+      body.appendChild(section);
+    });
+    $("#storyModal").classList.add("show");
+    $("#storyModal").setAttribute("aria-hidden", "false");
+    Progress.mark("m2-2");
   },
 
   closeStory() {
-    const modal = document.getElementById('storyModal');
-    modal.classList.remove('show');
+    $("#storyModal").classList.remove("show");
+    $("#storyModal").setAttribute("aria-hidden", "true");
   },
 
-  tryAction() {
-    this.closeStory();
-    // Auto-switch to module 1 and add action
-    Navigation.switchTo('m1');
-    // Visual feedback
-    const card = document.querySelector('#m1 .action-card.primary');
-    if (card) {
-      card.style.borderColor = '#6a9bcc';
-      card.querySelector('.action-card-title').textContent = '每天睡前放下手机10分钟';
-    }
+  bindModal() {
+    $("#storyModalClose").addEventListener("click", () => this.closeStory());
+    $("#storyModalBackdrop").addEventListener("click", () => this.closeStory());
   },
 
-  saveAction() {
-    this.closeStory();
-    // Show brief toast-like feedback
-    const toast = document.createElement('div');
-    toast.style.cssText = 'position:fixed;top:80px;left:50%;transform:translateX(-50%);background:var(--bg-card);padding:12px 24px;border-radius:20px;border:1px solid var(--accent-blue);color:var(--accent-blue);font-size:14px;font-weight:600;z-index:300;animation:bubbleIn 0.3s ease';
-    toast.textContent = '已收藏到行动备选库';
-    document.body.appendChild(toast);
-    setTimeout(() => toast.remove(), 2000);
+  bindActions() {
+    $("#tryPeerAction").addEventListener("click", () => {
+      APP.state.actionLabel = APP.state.peerAction;
+      Summary.render();
+      this.closeStory();
+      Navigation.switchTo("m1");
+      showToast("已带入行动计划");
+      Progress.mark("m2-3");
+      Progress.mark("m1-2");
+    });
+
+    $("#savePeerAction").addEventListener("click", () => {
+      Progress.mark("m2-3");
+      showToast("已收藏到行动备选");
+    });
+
+    $$(".warm-action").forEach((button) => {
+      button.addEventListener("click", () => {
+        if (button.classList.contains("sent")) return;
+        button.classList.add("sent");
+        button.textContent = `${button.textContent} · 已发送`;
+        Progress.mark("m2-4");
+      });
+    });
+  },
+};
+
+const Cognition = {
+  init() {
+    this.bindMoodRescue();
+    this.bindThoughts();
+    this.bindCustomThought();
+    this.bindBodyScan();
+    this.bindAlternatives();
+    this.bindCardActions();
   },
 
-  bindKeyStep() {
-    // handled in openStory
+  refreshCard() {
+    $("#dialoguePrompt").textContent = `你刚才提到“${APP.state.thought}”。除了最坏的解释，还有没有别的可能？`;
+    $("#responseThought").textContent = `我的自动想法：“${APP.state.thought}”`;
+    $("#responseAlternative").textContent = `更现实的回应：“${APP.state.alternative}”`;
+    Summary.render();
   },
 
-  bindWarmActions() {
-    const actions = document.querySelectorAll('#m2 .warm-action');
-    actions.forEach(act => {
-      act.addEventListener('click', () => {
-        if (act.classList.contains('sent')) return;
-        act.classList.add('sent');
-        act.textContent = act.textContent + ' \u2714';
+  bindMoodRescue() {
+    $("#moodRescueBtn").addEventListener("click", () => {
+      $("#moodRescueNote").classList.toggle("hidden");
+      Progress.mark("m3-1");
+    });
+  },
+
+  bindThoughts() {
+    $$(".thought-option").forEach((button) => {
+      button.addEventListener("click", () => {
+        $$(".thought-option").forEach((item) => item.classList.remove("selected"));
+        button.classList.add("selected");
+        APP.state.thought = button.textContent;
+        this.refreshCard();
+        Progress.mark("m3-1");
       });
     });
   },
 
-  bindStoryModal() {
-    const closeBtn = document.querySelector('#storyModal .story-modal-close');
-    if (closeBtn) closeBtn.addEventListener('click', () => this.closeStory());
-  }
-};
-
-// --- Module 3: Cognitive Restructuring ---
-const Cognition = {
-  selectedThought: null,
-  selectedBodyPart: null,
-  selectedEmotion: null,
-  selectedAlternative: null,
-
-  init() {
-    this.bindThoughtOptions();
-    this.bindBodyScan();
-    this.bindEmotionTags();
-    this.bindDialogue();
-    this.bindAlternativeOptions();
-    this.bindResponseCard();
-  },
-
-  bindThoughtOptions() {
-    const options = document.querySelectorAll('#m3 .thought-option');
-    options.forEach(opt => {
-      opt.addEventListener('click', () => {
-        options.forEach(o => o.classList.remove('selected'));
-        opt.classList.add('selected');
-        this.selectedThought = opt.textContent;
-      });
+  bindCustomThought() {
+    $("#customThoughtInput").addEventListener("input", (event) => {
+      const value = event.target.value.trim();
+      if (value.length >= 4) {
+        APP.state.thought = value;
+        this.refreshCard();
+        Progress.mark("m3-1");
+      }
     });
   },
 
   bindBodyScan() {
-    const parts = document.querySelectorAll('#m3 .body-part');
-    parts.forEach(part => {
-      part.addEventListener('click', () => {
-        parts.forEach(p => p.classList.remove('selected'));
-        part.classList.add('selected');
-        this.selectedBodyPart = part.dataset.part;
+    $$(".body-part").forEach((button) => {
+      button.addEventListener("click", () => {
+        $$(".body-part").forEach((item) => item.classList.remove("selected"));
+        button.classList.add("selected");
+        Progress.mark("m3-2");
+      });
+    });
+    $$(".emotion-tag").forEach((button) => {
+      button.addEventListener("click", () => {
+        $$(".emotion-tag").forEach((item) => item.classList.remove("selected"));
+        button.classList.add("selected");
+        Progress.mark("m3-2");
       });
     });
   },
 
-  bindEmotionTags() {
-    const tags = document.querySelectorAll('#m3 .emotion-tag');
-    tags.forEach(tag => {
-      tag.addEventListener('click', () => {
-        tags.forEach(t => t.classList.remove('selected'));
-        tag.classList.add('selected');
-        this.selectedEmotion = tag.textContent;
+  bindAlternatives() {
+    $$(".alternative-option").forEach((button) => {
+      button.addEventListener("click", () => {
+        $$(".alternative-option").forEach((item) => item.classList.remove("selected"));
+        button.classList.add("selected");
+        APP.state.alternative = button.textContent;
+        this.refreshCard();
+        Progress.mark("m3-3");
+        Progress.mark("m3-4");
       });
     });
   },
 
-  bindDialogue() {
-    // The dialogue flow is pre-built in HTML, interactions handled by alternative options
-  },
-
-  bindAlternativeOptions() {
-    const options = document.querySelectorAll('#m3 .alternative-option');
-    options.forEach(opt => {
-      opt.addEventListener('click', () => {
-        options.forEach(o => o.classList.remove('selected'));
-        opt.classList.add('selected');
-        this.selectedAlternative = opt.textContent;
-
-        // Generate response card
-        this.generateResponseCard();
-      });
+  bindCardActions() {
+    $("#saveResponseCard").addEventListener("click", () => {
+      Progress.mark("m3-4");
+      showToast("已保存到能量工具箱");
+    });
+    $("#setWallpaperBtn").addEventListener("click", () => {
+      showToast("壁纸功能将在正式版开放");
     });
   },
-
-  generateResponseCard() {
-    const cardArea = document.querySelector('#m3 .response-card-area');
-    if (!cardArea) return;
-
-    cardArea.innerHTML = `
-      <div class="response-card visible">
-        <div class="response-card-label">你的理性回应卡片</div>
-        <div class="response-card-thought">
-          我的自动想法："${this.selectedThought || '我感觉心跳好快，是不是要犯病了？'}"
-        </div>
-        <div class="response-card-response">
-          更现实的回应："${this.selectedAlternative || '这只是喝了咖啡的正常反应。它会过去的。'}"
-        </div>
-        <div class="response-card-actions">
-          <button class="btn-primary green" onclick="Cognition.saveCard()">保存到能量工具箱</button>
-          <button class="btn-secondary" onclick="Cognition.setWallpaper()">设为锁屏壁纸</button>
-        </div>
-      </div>
-    `;
-  },
-
-  saveCard() {
-    const toast = document.createElement('div');
-    toast.style.cssText = 'position:fixed;top:80px;left:50%;transform:translateX(-50%);background:var(--bg-card);padding:12px 24px;border-radius:20px;border:1px solid var(--accent-green);color:var(--accent-green);font-size:14px;font-weight:600;z-index:300;animation:bubbleIn 0.3s ease';
-    toast.textContent = '已保存到能量工具箱';
-    document.body.appendChild(toast);
-    setTimeout(() => toast.remove(), 2000);
-  },
-
-  setWallpaper() {
-    const toast = document.createElement('div');
-    toast.style.cssText = 'position:fixed;top:80px;left:50%;transform:translateX(-50%);background:var(--bg-card);padding:12px 24px;border-radius:20px;border:1px solid var(--accent-green);color:var(--accent-green);font-size:14px;font-weight:600;z-index:300;animation:bubbleIn 0.3s ease';
-    toast.textContent = '壁纸设置功能将在正式版中上线';
-    document.body.appendChild(toast);
-    setTimeout(() => toast.remove(), 2000);
-  },
-
-  bindResponseCard() {
-    // handled dynamically
-  }
 };
 
-// --- Module 4: Verbal Persuasion ---
 const Persuasion = {
+  data: [
+    { week: "第1周", confidence: 3, action: 2, cards: 1 },
+    { week: "第2周", confidence: 4, action: 3, cards: 2 },
+    { week: "第3周", confidence: 5, action: 4, cards: 3 },
+    { week: "第4周", confidence: 6, action: 5, cards: 4 },
+    { week: "第5周", confidence: 7, action: 6, cards: 5 },
+    { week: "第6周", confidence: 8, action: 7, cards: 6 },
+  ],
+
   init() {
-    this.bindSelfCardBlanks();
-    this.renderGrowthChart();
+    this.renderChart();
+    this.bindAffirmations();
+    Progress.mark("m4-1");
+    Progress.mark("m4-2");
+    Progress.mark("m4-4");
   },
 
-  bindSelfCardBlanks() {
-    const blanks = document.querySelectorAll('#m4 .self-card-fill .blank');
-    blanks.forEach(blank => {
-      blank.addEventListener('click', () => {
-        // Create inline input
-        const currentText = blank.textContent;
-        const isFilled = blank.classList.contains('filled');
+  renderChart() {
+    const bars = $("#chartBars");
+    const max = 10;
+    bars.innerHTML = "";
+    this.data.forEach((item) => {
+      const group = document.createElement("div");
+      group.className = "chart-bar-group";
+      group.innerHTML = `
+        <div class="chart-bar-stack">
+          <span class="chart-bar green" style="height:${(item.confidence / max) * 160}px"></span>
+          <span class="chart-bar orange" style="height:${(item.action / max) * 160}px"></span>
+          <span class="chart-bar blue" style="height:${(item.cards / max) * 160}px"></span>
+        </div>
+        <span class="chart-bar-label">${item.week}</span>
+      `;
+      bars.appendChild(group);
+    });
+  },
 
-        if (isFilled) {
-          // Allow re-editing
-          blank.classList.remove('filled');
-          blank.textContent = '';
-        }
+  bindAffirmations() {
+    $$(".blank").forEach((button) => {
+      button.addEventListener("click", () => {
+        const key = button.dataset.blank;
+        const current = APP.state.affirmations[key];
+        const value = window.prompt("写下一句你愿意对自己承认的话", current || "");
+        if (value === null) return;
+        const trimmed = value.trim();
+        APP.state.affirmations[key] = trimmed;
+        button.textContent = trimmed || "";
+        button.classList.toggle("filled", Boolean(trimmed));
+        Summary.render();
 
-        const input = document.createElement('input');
-        input.type = 'text';
-        input.style.cssText = 'width:100%;background:transparent;border:none;color:var(--accent-green);font-weight:600;font-size:16px;outline:none;text-align:center;';
-        input.placeholder = '点击输入...';
-        input.value = isFilled ? currentText : '';
-
-        blank.textContent = '';
-        blank.appendChild(input);
-        input.focus();
-
-        input.addEventListener('blur', () => {
-          const val = input.value.trim();
-          if (val) {
-            blank.textContent = val;
-            blank.classList.add('filled');
-          } else {
-            blank.textContent = '';
-            blank.classList.remove('filled');
-          }
-          input.remove();
-        });
-
-        input.addEventListener('keydown', (e) => {
-          if (e.key === 'Enter') input.blur();
-        });
+        const filledCount = Object.values(APP.state.affirmations).filter(Boolean).length;
+        if (filledCount >= 2) Progress.mark("m4-3");
       });
     });
   },
-
-  renderGrowthChart() {
-    // Simulated growth data
-    const weeks = ['第1周', '第2周', '第3周', '第4周', '第5周', '第6周'];
-    const confidence = [3, 4, 5, 6, 7, 8]; // confidence scores
-    const actions = [2, 4, 5, 6, 7, 7]; // action completion
-    const cards = [1, 2, 3, 4, 5, 6]; // cognitive cards
-
-    const container = document.querySelector('#m4 .growth-chart-container');
-    if (!container) return;
-
-    const barsArea = container.querySelector('.chart-bars');
-    if (!barsArea) return;
-
-    const maxVal = 10;
-    weeks.forEach((week, i) => {
-      const group = document.createElement('div');
-      group.className = 'chart-bar-group';
-
-      // Stacked bar: confidence (green) + actions (orange) + cards (blue)
-      const bar = document.createElement('div');
-      bar.className = 'chart-bar';
-      bar.style.height = `${(confidence[i] / maxVal) * 160}px`;
-
-      const bar2 = document.createElement('div');
-      bar2.className = 'chart-bar orange';
-      bar2.style.height = `${(actions[i] / maxVal) * 120}px`;
-
-      const label = document.createElement('div');
-      label.className = 'chart-bar-label';
-      label.textContent = week;
-
-      group.appendChild(bar);
-      group.appendChild(bar2);
-      group.appendChild(label);
-      barsArea.appendChild(group);
-    });
-  }
 };
 
-// --- Initialize ---
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener("DOMContentLoaded", () => {
   ThemeManager.init();
   Navigation.init();
-  ScrollAnimations.init();
   ActionPlan.init();
   PeerStories.init();
   Cognition.init();
   Persuasion.init();
-
-  // Show first module
-  Navigation.switchTo('m1');
+  Summary.render();
+  Progress.render();
+  Navigation.switchTo("m1");
 });
